@@ -1,0 +1,35 @@
+﻿<Properties StartupConfiguration="{20F79419-527E-4F28-8405-EEE72B06AB04}|">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assignment2/Views/Home/Index.cshtml">
+    <Files>
+      <File FileName="Assignment2/Web.config" Line="6" Column="16" />
+      <File FileName="Assignment2/Views/Home/Index.cshtml" Line="10" Column="2" />
+      <File FileName="Assignment2/Views/Shared/_Layout.cshtml" Line="21" Column="19" />
+      <File FileName="Assignment2/Views/Home/Actor.cshtml" Line="2" Column="1" />
+      <File FileName="Assignment2/Views/Home/DeckDisplay.cshtml" Line="2" Column="21" />
+      <File FileName="Assignment2/Controllers/HomeController.cs" Line="29" Column="34" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Assignment2" expanded="True">
+            <Node name="Assignment2" expanded="True">
+              <Node name="App_Data" expanded="True" />
+              <Node name="Controllers" expanded="True" />
+              <Node name="Views" expanded="True" selected="True">
+                <Node name="Home" expanded="True" />
+                <Node name="Shared" expanded="True" />
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.ItemProperties.Assignment2 PreferredExecutionTarget="/Applications/Google Chrome.app" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
