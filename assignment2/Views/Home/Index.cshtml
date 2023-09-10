@@ -1,0 +1,41 @@
+﻿@using WebMatrix.Data
+
+@{
+    var db = Database.Open("FoodDB");
+    var orders = db.Query("SELECT * FROM orders");
+    var finishedOrders = db.Query("SELECT * FROM orders where order_status = 'FINISHED'");
+    var cancelledOrders = db.Query("SELECT * FROM orders where order_status = 'CANCELLED'");
+}
+
+<h2>All Orders</h2>
+<br />
+<div class="form-group">
+    <label for="statusDropdown">Select Order Status:</label>
+    <select class="form-control" id="statusDropdown">
+        <option value=0">ALL</option>
+        <option value=1>FINISHED</option>
+        <option value=2>CANCELLED</option>
+    </select>
+</div>
+<br />
+<div class="table-responsive">
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Order Status</th>
+                <th>Order Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in orders)
+            {
+                <tr>
+                    <td>@order.order_id</td>
+                    <td>@order.order_status</td>
+                    <td>@order.order_amount</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
