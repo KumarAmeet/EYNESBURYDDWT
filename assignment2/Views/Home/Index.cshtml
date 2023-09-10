@@ -2,20 +2,30 @@
 
 @{
     var db = Database.Open("FoodDB");
-    var orders = db.Query("SELECT * FROM orders");
-    var finishedOrders = db.Query("SELECT * FROM orders where order_status = 'FINISHED'");
-    var cancelledOrders = db.Query("SELECT * FROM orders where order_status = 'CANCELLED'");
+    var orders = db.Query("select Top(200)o.order_id,o.order_status,o.order_amount, c.channel_name, s.store_name from orders o inner join channels c on c.channel_id = o.channel_id inner join stores s on s.store_id = o.store_id");
 }
 
 <h2>All Orders</h2>
 <br />
 <div class="form-group">
-    <label for="statusDropdown">Select Order Status:</label>
-    <select class="form-control" id="statusDropdown">
-        <option value=0">ALL</option>
-        <option value=1>FINISHED</option>
-        <option value=2>CANCELLED</option>
-    </select>
+    <div class="row">
+        <div class="col-md-1.5">
+            <label for="statusDropdown">Select Order Status:</label>
+        </div>
+        <div class="col-md-3">
+            <select class="form-control" id="statusDropdown" onchange="LoadData()">
+                <option value='ALL'>ALL</option>
+                <option value='FINISHED'>FINISHED</option>
+                <option value='CANCELED'>CANCELED</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <input type="text" id="txtSearch" class="form-control" placeholder="FilterBy" />
+        </div>
+        <div class="col-md-3">
+            <button class="btn btn-primary" onclick="LoadData()">Search</button>
+        </div>
+    </div>
 </div>
 <br />
 <div class="table-responsive">
@@ -25,17 +35,49 @@
                 <th>Order ID</th>
                 <th>Order Status</th>
                 <th>Order Amount</th>
+                <th>Chanel Name</th>
+                <th>Store Name</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="OrdersBody">
             @foreach (var order in orders)
             {
                 <tr>
                     <td>@order.order_id</td>
                     <td>@order.order_status</td>
                     <td>@order.order_amount</td>
+                    <td>@order.channel_name</td>
+                    <td>@order.store_name</td>
                 </tr>
             }
         </tbody>
     </table>
 </div>
+
+<script>
+    function LoadData() {
+        var sFilterBy = document.getElementById("statusDropdown").value;
+        var txtSearch = document.getElementById("txtSearch").value;
+        $.ajax({
+            url: "/Home/ListFilteredOrders",
+            type: "POST",
+            data: '{ FilterBy: "' + sFilterBy + '", txtSearch: "' + txtSearch + '"}',
+            contentType: "application/json; charset=utf-8",
+            dataType: "JSON",
+            success: function (response) {
+                var tableBody = document.getElementById("OrdersBody");
+                tableBody.innerHTML = "";
+                var jsonData = JSON.parse(response);
+                $.each(jsonData, function (index, item) {
+                    var tr = document.createElement('tr');
+                    var row = "\n                    <td>" + item.order_id + "</td>\n                    <td>" + item.order_status + "</td>\n                    <td>" + item.order_amount.toFixed(2) + "</td>\n                    <td>" + item.channel_name + "</td>\n                    <td>" + item.store_name + "</td>";
+                    tr.innerHTML = row;
+                    tableBody.appendChild(tr);
+                });
+            },
+            error: function (errormessage) {
+              alert(errormessage.responseText);
+            }
+        });
+    }
+</script>

@@ -1,0 +1,159 @@
+﻿
+
+/****** Object:  Table [dbo].[channels]    Script Date: 19/08/2023 7:01:04 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[channels](
+	[channel_id] [int] NOT NULL,
+	[channel_name] [varchar](50) NOT NULL,
+	[channel_type] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_channels] PRIMARY KEY CLUSTERED 
+(
+	[channel_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[deliveries]    Script Date: 19/08/2023 7:01:04 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[deliveries](
+	[delivery_id] [int] NOT NULL,
+	[delivery_order_id] [int] NOT NULL,
+	[driver_id] [int] NULL,
+	[delivery_distance_meters] [int] NULL,
+	[delivery_status] [varchar](50) NULL,
+ CONSTRAINT [PK_deliveries] PRIMARY KEY CLUSTERED 
+(
+	[delivery_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[drivers]    Script Date: 19/08/2023 7:01:04 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[drivers](
+	[driver_id] [int] NOT NULL,
+	[driver_modal] [varchar](50) NOT NULL,
+	[driver_type] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_drivers] PRIMARY KEY CLUSTERED 
+(
+	[driver_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[hubs]    Script Date: 19/08/2023 7:01:04 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[hubs](
+	[hub_id] [int] NOT NULL,
+	[hub_name] [varchar](50) NOT NULL,
+	[hub_city] [varchar](50) NOT NULL,
+	[hub_state] [varchar](50) NOT NULL,
+	[hub_latitude] [float] NOT NULL,
+	[hub_longitude] [float] NOT NULL,
+ CONSTRAINT [PK_hubs] PRIMARY KEY CLUSTERED 
+(
+	[hub_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[orders]    Script Date: 19/08/2023 7:01:04 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[orders](
+	[order_id] [int] NOT NULL,
+	[store_id] [int] NOT NULL,
+	[channel_id] [int] NOT NULL,
+	[order_status] [varchar](50) NOT NULL,
+	[order_amount] [float] NOT NULL,
+	[order_delivery_fee] [float] NOT NULL,
+	[order_delivery_cost] [float] NULL,
+	[order_moment_created] [datetime2](7) NOT NULL,
+	[order_moment_accepted] [datetime2](7) NULL,
+	[order_moment_ready] [datetime2](7) NULL,
+	[order_moment_collected] [datetime2](7) NULL,
+	[order_moment_in_expedition] [datetime2](7) NULL,
+	[order_moment_delivering] [datetime2](7) NULL,
+	[order_moment_delivered] [datetime2](7) NULL,
+	[order_moment_finished] [datetime2](7) NULL,
+	[order_metric_collected_time] [float] NULL,
+	[order_metric_paused_time] [float] NULL,
+	[order_metric_production_time] [float] NULL,
+	[order_metric_walking_time] [float] NULL,
+	[order_metric_expediton_speed_time] [float] NULL,
+	[order_metric_transit_time] [float] NULL,
+	[order_metric_cycle_time] [float] NULL,
+ CONSTRAINT [PK_orders] PRIMARY KEY CLUSTERED 
+(
+	[order_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[payments]    Script Date: 19/08/2023 7:01:04 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[payments](
+	[payment_id] [int] NOT NULL,
+	[payment_order_id] [int] NULL,
+	[payment_amount] [float] NULL,
+	[payment_fee] [float] NULL,
+	[payment_method] [varchar](50) NULL,
+	[payment_status] [varchar](50) NULL,
+ CONSTRAINT [PK_payments] PRIMARY KEY CLUSTERED 
+(
+	[payment_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[stores]    Script Date: 19/08/2023 7:01:04 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[stores](
+	[store_id] [int] NOT NULL,
+	[hub_id] [int] NOT NULL,
+	[store_name] [varchar](50) NOT NULL,
+	[store_segment] [varchar](50) NOT NULL,
+	[store_plan_price] [float] NULL,
+	[store_latitude] [float] NULL,
+	[store_longitude] [float] NULL,
+ CONSTRAINT [PK_stores] PRIMARY KEY CLUSTERED 
+(
+	[store_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[deliveries]  WITH CHECK ADD  CONSTRAINT [FK_deliveries_drivers] FOREIGN KEY([driver_id])
+REFERENCES [dbo].[drivers] ([driver_id])
+GO
+ALTER TABLE [dbo].[deliveries] CHECK CONSTRAINT [FK_deliveries_drivers]
+GO
+ALTER TABLE [dbo].[orders]  WITH CHECK ADD  CONSTRAINT [FK_orders_channels] FOREIGN KEY([channel_id])
+REFERENCES [dbo].[channels] ([channel_id])
+GO
+ALTER TABLE [dbo].[orders] CHECK CONSTRAINT [FK_orders_channels]
+GO
+ALTER TABLE [dbo].[orders]  WITH CHECK ADD  CONSTRAINT [FK_orders_stores] FOREIGN KEY([store_id])
+REFERENCES [dbo].[stores] ([store_id])
+GO
+ALTER TABLE [dbo].[orders] CHECK CONSTRAINT [FK_orders_stores]
+GO
+ALTER TABLE [dbo].[stores]  WITH CHECK ADD  CONSTRAINT [FK_stores_hubs] FOREIGN KEY([hub_id])
+REFERENCES [dbo].[hubs] ([hub_id])
+GO
+ALTER TABLE [dbo].[stores] CHECK CONSTRAINT [FK_stores_hubs]
+GO
+

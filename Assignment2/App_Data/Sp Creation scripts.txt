@@ -1,0 +1,40 @@
+Create or Alter Procedure SelectFilteredPayements
+@paymentmethod varchar(500),
+@grouping varchar(500)
+as 
+SELECT Top(200) p.payment_order_id,p.payment_amount,p.payment_method,p.payment_status, c.channel_name, c.channel_type, o.order_status,o.order_amount, 
+o.order_delivery_cost, o.order_delivery_fee,s.store_name, s.store_segment 
+from orders o 
+inner join stores s on s.store_id = o.store_id 
+inner join channels c on c.channel_id = o.channel_id 
+inner join payments p on p.payment_order_id = o.order_id 
+where p.payment_method =@paymentmethod or @paymentmethod = 'ALL' 
+Order by Case when @grouping = 'YES' Then p.payment_method Else CAST(p.payment_order_id AS VARCHAR) 
+End
+
+Create or Alter Procedure SelectFilteredOrders
+@FilterBy varchar(500),
+@txtSearch varchar(500)
+as     
+Begin    
+select Top(200)o.order_id,o.order_status,o.order_amount, c.channel_name, s.store_name 
+from orders o 
+inner join channels c on c.channel_id = o.channel_id 
+inner join stores s on s.store_id = o.store_id 
+where (o.order_status = @FilterBy Or @FilterBy = 'ALL')
+and (o.order_id LIKE '%' + @txtSearch + '%' OR
+    o.order_status LIKE '%' + @txtSearch + '%' OR
+    CAST(o.order_amount AS NVARCHAR(255)) LIKE '%' + @txtSearch + '%' OR
+    c.channel_name LIKE '%' + @txtSearch + '%' OR
+    s.store_name LIKE '%' + @txtSearch + '%' OR @txtSearch = '')
+End
+
+Create or Alter Procedure SelectFilteredHubs
+as     
+Begin    
+ SELECT Top(200) o.order_id,o.order_status,o.order_amount , h.hub_name,h.hub_city, h.hub_state 
+ from orders o 
+ inner join stores s on s.store_id = o.store_id 
+ inner join hubs h on h.hub_id = s.hub_id 
+ Order By h.hub_id
+End

@@ -1,1 +1,106 @@
-﻿<h2>Payment Analysis</h2>
+﻿@using WebMatrix.Data
+
+@{
+    var db = Database.Open("FoodDB");
+    var payments = db.Query("SELECT Top(200) p.payment_order_id,p.payment_amount,p.payment_method,p.payment_status, c.channel_name, c.channel_type, o.order_status,o.order_amount, o.order_delivery_cost, o.order_delivery_fee,s.store_name, s.store_segment from orders o inner join stores s on s.store_id = o.store_id inner join channels c on c.channel_id = o.channel_id inner join payments p on p.payment_order_id = o.order_id");
+}
+
+<h2>Payment Analysis</h2>
+<br />
+<div class="form-group">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <label for="groupingDropdown">Apply Payment Grouping:</label>
+                <select class="form-control" id="groupingDropdown" onchange="LoadData()">
+                    <option value='NO' selected>No</option>
+                    <option value='YES'>Yes</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="paymentmethodDropdown">Show Payment:</label>
+                <select class="form-control" id="paymentmethodDropdown" onchange="LoadData()">
+                    <option value='ALL'>ALL</option>
+                    <option value='MEAL_BENEFIT'>MEAL_BENEFIT</option>
+                    <option value='CREDIT_STORE'>CREDIT_STORE</option>
+                    <option value='ONLINE'>ONLINE</option>
+                    <option value='INSTALLMENT_CREDIT_STORE'>INSTALLMENT_CREDIT_STORE</option>
+                    <option value='BANK_TRANSFER_DC'>BANK_TRANSFER_DC</option>
+                    <option value='STORE_DIRECT_PAYMENT'>STORE_DIRECT_PAYMENT</option>
+                    <option value='PAYMENT_LINK'>PAYMENT_LINK</option>
+                    <option value='MONEY'>MONEY</option>
+                    <option value='VOUCHER_OL'>VOUCHER_OL</option>
+                    <option value='CREDIT'>CREDIT</option>
+                    <option value='VOUCHER'>VOUCHER</option>
+                    <option value='VOUCHER_DC'>VOUCHER_DC</option>
+                    <option value='DEBIT'>DEBIT</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div class="table-responsive">
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Payment Order ID</th>
+                <th>Payment Amount</th>
+                <th>Payment Method</th>
+                <th>Payment Status</th>
+                <th>Channel Name</th>
+                <th>Channel Type</th>
+                <th>Order Status</th>
+                <th>Order Amount</th>
+                <th>Store Name</th>
+                <th>Store Segment</th>
+            </tr>
+        </thead>
+        <tbody id="PaymentsBody">
+            @foreach (var payment in payments)
+            {
+                <tr>
+                    <td>@payment.payment_order_id</td>
+                    <td>@payment.payment_amount</td>
+                    <td>@payment.payment_method</td>
+                    <td>@payment.payment_status</td>
+                    <td>@payment.channel_name</td>
+                    <td>@payment.channel_type</td>
+                    <td>@payment.order_status</td>
+                    <td>@payment.order_amount</td>
+                    <td>@payment.store_name</td>
+                    <td>@payment.store_segment</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function LoadData() {
+        var sgroupingDropdown = document.getElementById("groupingDropdown").value;
+        var spaymentmethodDropdown = document.getElementById("paymentmethodDropdown").value;
+        $.ajax({
+            url: "/Home/ListFilteredPayements",
+            type: "POST",
+            data: '{ grouping: "' + sgroupingDropdown + '", paymentmethod: "' + spaymentmethodDropdown + '"}',
+            contentType: "application/json; charset=utf-8",
+            dataType: "JSON",
+            success: function (response) {
+                var tableBody = document.getElementById("PaymentsBody");
+                tableBody.innerHTML = "";
+                var jsonData = JSON.parse(response);
+                $.each(jsonData, function (index, item) {
+                    var tr = document.createElement('tr');
+                    //var row = "\n            \n                <tr>\n                    <td>" + item.payment_order_id + "</td>\n                    <td>" + item.payment_amount + "</td>\n                    <td>" + item.payment_method + "</td>\n                    <td>" + item.payment_status + "</td>\n                    <td>" + item.channel_name + "</td>\n                    <td>" + item.channel_type + "</td>\n                    <td>" + item.order_status + "</td>\n                    <td>" + item.order_amount + "</td>\n                    <td>" + item.store_name + "</td>\n                    <td>" + item.store_segment + "</td></tr>";
+                    var row = "\n                    <td>" + item.payment_order_id + "</td>\n                    <td>" + item.payment_amount + "</td>\n                    <td>" + item.payment_method + "</td>\n                    <td>" + item.payment_status + "</td>\n                    <td>" + item.channel_name + "</td>\n                    <td>" + item.channel_type + "</td>\n                    <td>" + item.order_status + "</td>\n                    <td>" + item.order_amount + "</td>\n                    <td>" + item.store_name + "</td>\n                    <td>" + item.store_segment + "</td>";
+                    tr.innerHTML = row;
+                    tableBody.appendChild( tr);
+                });
+            },
+            error: function (errormessage) {
+              alert(errormessage.responseText);
+            }
+        });
+}
+</script>
